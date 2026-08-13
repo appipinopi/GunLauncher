@@ -14,50 +14,41 @@ public class ExpandedGlockPartsRegistry {
     private static final Map<Integer, String> PART_NAMES = new HashMap<>();
 
     static {
-        // Glock Gen5 Official Parts List (Sportec / Glock Reference)
-        PART_NAMES.put(1, "Slide G17 Gen5/FS (スライド)");
-        PART_NAMES.put(2, "Barrel G17 Gen5 / M (バレル)");
-        PART_NAMES.put(3, "Recoil spring assembled (リコイルスプリング)");
-        PART_NAMES.put(4, "Firing pin assembled (ファイアリングピン)");
-        PART_NAMES.put(5, "Spacer sleeve (スペーサーリーブ)");
-        PART_NAMES.put(6, "Firing pin spring 24N (ファイアリングピンバネ)");
-        PART_NAMES.put(7, "Spring cups (スプリングカップ)");
-        PART_NAMES.put(8, "Firing pin channel liner (チャンネルライナー)");
-        PART_NAMES.put(9, "Firing pin safety assembled (FPセーフティ)");
-        PART_NAMES.put(10, "Extractor Loaded Chamber Indicator (エキストラクター)");
-        PART_NAMES.put(11, "Extractor depressor plunger assembled (プランジャー)");
-        PART_NAMES.put(12, "Spring-loaded bearing (スプリングロードベアリング)");
-        PART_NAMES.put(13, "Slide cover plate (スライドカバープレート)");
-        PART_NAMES.put(14, "Rear sight 6,1 GMS polymer (リアサイト)");
-        PART_NAMES.put(15, "Front sight 4.1 set polymer (フロントサイト)");
-        PART_NAMES.put(16, "Frame G17 Gen5 flared assembled (ポリマーフレーム)");
-        PART_NAMES.put(17, "Beavertail set (ビーバーテイルセット)");
-        PART_NAMES.put(18, "Magazine catch spring (マガジンキャッチバネ)");
-        PART_NAMES.put(19, "Magazine catch reversible (マガジンキャッチ)");
-        PART_NAMES.put(20, "Slide lock spring (スライドロックバネ)");
-        PART_NAMES.put(21, "Slide lock (スライドロック)");
-        PART_NAMES.put(22, "Locking block (ロッキングブロック)");
-        PART_NAMES.put(23, "Trigger mechanism housing with ejector (ハウジング/エジェクター)");
-        PART_NAMES.put(24, "Connector 5 (dot) (コネクター)");
-        PART_NAMES.put(25, "Trigger with trigger bar AMBI (トリガー/トリガーバー)");
-        PART_NAMES.put(26, "Slide stop lever AMBI (スライドストップレバー)");
-        PART_NAMES.put(27, "Trigger pin AMBI (トリガーピン)");
-        PART_NAMES.put(28, "Trigger housing pin MBS (ハウジングピン)");
-        PART_NAMES.put(29, "Magazine tube (マガジンチューブ)");
-        PART_NAMES.put(30, "Follower orange (マガジンフォロアー)");
-        PART_NAMES.put(31, "Magazine spring (マガジンバネ)");
-        PART_NAMES.put(32, "Magazine floor plate (フロアプレート)");
-
-        // ネジ類 (0.5mm ~ 2.0mm)
-        for (int i = 33; i <= 60; i++) {
-            double mm = 0.5 + ((i - 33) * 0.05);
-            PART_NAMES.put(i, "Gen5 Precision Screw (" + String.format("%.2f", mm) + "mm Micro Screw)");
-        }
-
-        // 61〜150はGen5内部精密メカニカル・スプリング・ピン類
-        for (int i = 61; i <= 150; i++) {
-            PART_NAMES.put(i, "Gen5 Internal Precision Component #" + i);
-        }
+        // Glock Gen5 Official Spare Parts List (Pos 1 - 35)
+        PART_NAMES.put(1, "Slide G17 Gen5/FS (Item No. 43773)");
+        PART_NAMES.put(2, "Barrel G17 Gen5 / M (Item No. 41002)");
+        PART_NAMES.put(3, "Recoil spring assembled (Item No. 33786)");
+        PART_NAMES.put(4, "Firing pin assembled (Item No. 39327)");
+        PART_NAMES.put(5, "Spacer sleeve (Item No. 56)");
+        PART_NAMES.put(6, "Firing pin spring 24N (Item No. 63)");
+        PART_NAMES.put(7, "Spring cups (Item No. 70)");
+        PART_NAMES.put(8, "Firing pin safety assembled (Item No. 33782)");
+        PART_NAMES.put(9, "Firing pin safety spring (Item No. 91)");
+        PART_NAMES.put(10, "Extractor Loaded Chamber Indicator (Item No. 33774)");
+        PART_NAMES.put(11, "Extractor depressor plunger assembled (Item No. 3449)");
+        PART_NAMES.put(12, "Extractor depressor plunger spring (Item No. 33522)");
+        PART_NAMES.put(13, "Spring-loaded bearing (Item No. 2714)");
+        PART_NAMES.put(14, "Slide cover plate (Item No. 33784)");
+        PART_NAMES.put(15, "Rear sight 6,1 GMS polymer (Item No. 39733)");
+        PART_NAMES.put(16, "Front sight 4.1 set polymer (Item No. 7073)");
+        PART_NAMES.put(17, "Frame G17 Gen5 flared assembled (Item No. 47985)");
+        PART_NAMES.put(18, "Magazine catch spring (Item No. 39543)");
+        PART_NAMES.put(19, "Magazine catch reversible (Item No. 7534)");
+        PART_NAMES.put(20, "Slide lock spring (Item No. 39567)");
+        PART_NAMES.put(21, "Slide lock (Item No. 33706)");
+        PART_NAMES.put(22, "Locking block (Item No. 7894)");
+        PART_NAMES.put(23, "Trigger mechanism housing with ejector (Item No. 47208)");
+        PART_NAMES.put(24, "Connector 5 (dot) (Item No. 7965)");
+        PART_NAMES.put(25, "Trigger with trigger bar AMBI (Item No. 39702)");
+        PART_NAMES.put(26, "Slide stop lever AMBI (Item No. 47247)");
+        PART_NAMES.put(27, "Trigger pin AMBI (Item No. 8298)");
+        PART_NAMES.put(28, "Trigger housing pin SF (Item No. 1774)");
+        PART_NAMES.put(29, "Trigger housing pin MBS (Item No. 7416)");
+        PART_NAMES.put(30, "Magazine tube (Item No. 1587)");
+        PART_NAMES.put(31, "Follower orange (Item No. 5233)");
+        PART_NAMES.put(32, "Magazine spring (Item No. 33510)");
+        PART_NAMES.put(33, "Magazine insert (Item No. 1693)");
+        PART_NAMES.put(34, "Magazine floor plate 01 (Item No. 39283)");
     }
 
     public static String getPartName(int id) {
@@ -70,15 +61,15 @@ public class ExpandedGlockPartsRegistry {
         String name = getPartName(id);
 
         if (isDamaged) {
-            meta.setDisplayName(ChatColor.RED + "【故障/破損】 " + name);
+            meta.setDisplayName(ChatColor.RED + "【故障/破損】 Pos." + id + " " + name);
             List<String> lore = new ArrayList<>();
-            lore.add(ChatColor.DARK_RED + "Gen5規格のパーツに歪みや破損があります！");
+            lore.add(ChatColor.DARK_RED + "公式パーツに破損または不適合があります！");
             meta.setLore(lore);
-            meta.setCustomModelData(8000 + id);
+            meta.setCustomModelData(6000 + id);
         } else {
-            meta.setDisplayName(ChatColor.WHITE + name);
+            meta.setDisplayName(ChatColor.WHITE + "Pos." + id + " " + name);
             List<String> lore = new ArrayList<>();
-            lore.add(ChatColor.GREEN + "状態: Glock Gen5公式規格 (Part ID #" + id + ")");
+            lore.add(ChatColor.GREEN + "状態: Glock Gen5 公式パーツ");
             meta.setLore(lore);
             meta.setCustomModelData(7000 + id);
         }

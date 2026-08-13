@@ -68,13 +68,13 @@ public class GunCraftPlugin extends JavaPlugin {
                     advancedManager.openHammerForge(player);
                 } else if (sub.equals("part")) {
                     if (args.length < 2) {
-                        player.sendMessage("§cUsage: /guncraft part <1-150>");
+                        player.sendMessage("§cUsage: /guncraft part <1-34>");
                         return true;
                     }
                     try {
                         int partId = Integer.parseInt(args[1]);
-                        if (partId < 1 || partId > 150) {
-                            player.sendMessage("§cPart ID must be between 1 and 150.");
+                        if (partId < 1 || partId > 34) {
+                            player.sendMessage("§cPart ID must be between 1 and 34 (Glock Gen5 Official Parts).");
                             return true;
                         }
                         ItemStack part = jp.wolfx.guncraft.item.ExpandedGlockPartsRegistry.getPart(partId, false);
@@ -82,33 +82,6 @@ public class GunCraftPlugin extends JavaPlugin {
                         player.sendMessage("§aAdded " + part.getItemMeta().getDisplayName() + " (CMD: " + part.getItemMeta().getCustomModelData() + ")");
                     } catch (NumberFormatException e) {
                         player.sendMessage("§cInvalid part ID number.");
-                    }
-                } else if (sub.equals("screw")) {
-                    if (args.length < 2) {
-                        player.sendMessage("§cUsage: /guncraft screw <sizeMm (e.g. 1.2)>");
-                        return true;
-                    }
-                    try {
-                        double size = Double.parseDouble(args[1]);
-                        ItemStack screw = jp.wolfx.guncraft.item.PrecisionToolsRegistry.getScrew(size);
-                        player.getInventory().addItem(screw);
-                        player.sendMessage("§aAdded " + screw.getItemMeta().getDisplayName());
-                    } catch (NumberFormatException e) {
-                        player.sendMessage("§cInvalid size number.");
-                    }
-                } else if (sub.equals("driver")) {
-                    if (args.length < 3) {
-                        player.sendMessage("§cUsage: /guncraft driver <minMm> <maxMm>");
-                        return true;
-                    }
-                    try {
-                        double min = Double.parseDouble(args[1]);
-                        double max = Double.parseDouble(args[2]);
-                        ItemStack driver = jp.wolfx.guncraft.item.PrecisionToolsRegistry.getPrecisionScrewdriver(min, max);
-                        player.getInventory().addItem(driver);
-                        player.sendMessage("§aAdded Precision Screwdriver (" + min + "mm - " + max + "mm)");
-                    } catch (NumberFormatException e) {
-                        player.sendMessage("§cInvalid number format.");
                     }
                 } else {
                     player.sendMessage(ChatColor.RED + "Unknown subcommand.");

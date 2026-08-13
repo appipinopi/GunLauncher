@@ -1,62 +1,56 @@
-# Glock Gen5 (Grok 17) 公式パーツ準拠 製造マスターマニュアル
+# Glock Gen5 (Grok 17) 公式パーツリスト準拠 マニュアル
 
-本書は、Sportec社提供の **Glock Gen5 公式分解図およびパーツリスト（PDF）** に準拠し、Minecraft 銃撃戦エコシステム（**Gun-Craft**）において最高精度のグロックを製造するための公式マニュアルです [1]。
-
----
-
-## 🏭 製造サプライチェーンの全体像
-
-Grok 17 (Glock Gen5) の完成には、公式リストに基づく**150個以上の個別パーツ**および**精密ネジ**が必要です。
-
-```text
-[原材料: 鉄塊 / 鋼線 / ポリマー / 真鍮]
-       │
-       ├─► [スプリング巻き機] ──► リコイルスプリング、各スプリング類
-       ├─► [CNC精密加工機]   ──► スライド、バレル、トリガー、ピン、精密ネジ
-       ├─► [射出成形機]       ──► Frame G17 Gen5（ポリマーフレーム）
-       ├─► [ハンマー鍛造機]   ──► Match-Grade Barrel（銃身）
-       │
-       └─► [銃器プリント台]   ──► Glock Gen5 設計図（プリント済みの紙）
-              │
-              ▼
-    [銃器組立台 (150パーツ + 設計図 + 精密ドライバー)] ──► Glock Gen5 本体完成！
-```
+本ドキュメントは、Sportec社提供の **Glock Gen5 公式パーツリスト（Pos. 1 〜 35）** に完全準拠し、Minecraft 銃撃戦エコシステム（**Gun-Craft**）において正しくグロックを製造するための公式リファレンスです [1]。
 
 ---
 
-## 📋 Glock Gen5 公式パーツ・製造機械 対応一覧表
+## 📋 Glock Gen5 公式パーツリスト (Pos. 1 ～ 35)
 
-| Pos. Nr. | 公式アイテム名称 (Glock Gen5 Spare Parts) | 製造機械 (Required Machine) | 必要素材 |
-| :--- | :--- | :--- | :--- |
-| **1** | Slide G17 Gen5/FS (スライド) | CNC精密加工機 (`STONECUTTER`) | 鉄インゴット x2 |
-| **2** | Barrel G17 Gen5 / M (バレル) | ハンマー鍛造機 (`ANVIL`) | 鋼材 / ネットライト |
-| **3** | Recoil spring assembled (リコイルスプリング) | スプリング巻き機 (`PISTON`) | 鋼線 x2 |
-| **4-7** | Firing pin assembled (ファイアリングピン周辺) | CNC精密加工機 / 巻き機 | 鉄・鋼材各種 |
-| **8** | Firing pin channel liner (チャンネルライナー) | CNC精密加工機 (`STONECUTTER`) | 鉄ナゲット x1 |
-| **9** | Firing pin safety assembled (FPセーフティ) | CNC精密加工機 (`STONECUTTER`) | 鉄ナゲット x1 |
-| **10** | Extractor Loaded Chamber Indicator (エキストラクター) | CNC精密加工機 (`STONECUTTER`) | 鉄ナゲット x1 |
-| **11-12** | Extractor depressor plunger & bearing | CNC精密加工機 (`STONECUTTER`) | 鉄ナゲット x1 |
-| **13** | Slide cover plate (スライドカバープレート) | CNC精密加工機 (`STONECUTTER`) | 鉄ナゲット x1 |
-| **14-15** | Rear & Front sights (サイトセット) | CNC精密加工機 (`STONECUTTER`) | 鉄ナゲット x2 |
-| **16** | Frame G17 Gen5 flared assembled (フレーム) | 射出成形機 (`FURNACE`) | 黒コンクリート/樹脂 |
-| **17** | Beavertail set (ビーバーテイルセット) | 射出成形機 (`FURNACE`) | ポリマー素材 |
-| **18-19** | Magazine catch & spring (マガジンキャッチ) | CNC精密加工機 / 巻き機 | 鉄・鋼線各種 |
-| **20-21** | Slide lock & spring (スライドロック) | CNC精密加工機 / 巻き機 | 鉄・鋼線各種 |
-| **22** | Locking block (ロッキングブロック) | CNC精密加工機 (`STONECUTTER`) | 鉄インゴット x1 |
-| **23** | Trigger mechanism housing with ejector (ハウジング) | CNC精密加工機 (`STONECUTTER`) | 鉄インゴット x1 |
-| **24** | Connector 5 (dot) (コネクター) | CNC精密加工機 (`STONECUTTER`) | 鉄ナゲット x1 |
-| **25** | Trigger with trigger bar AMBI (トリガーバー) | CNC精密加工機 (`STONECUTTER`) | 鉄インゴット x1 |
-| **26** | Slide stop lever AMBI (スライドストップ) | CNC精密加工機 (`STONECUTTER`) | 鉄インゴット x1 |
-| **27-28** | Trigger & housing pins (各種ピン) | CNC精密加工機 (`STONECUTTER`) | 鉄ナゲット x2 |
-| **29-32** | Magazine assembly (マガジン構成部品) | CNC精密加工機 / 巻き機 | 鉄・鋼線・樹脂 |
-| **33-60** | Gen5 Precision Screws (0.5mm ~ 2.0mm) | CNC精密加工機 (`STONECUTTER`) | 鉄ナゲット x1 |
-| **61-150**| Gen5 Internal Precision Components | CNC精密加工機 / 巻き機 | 鉄/鋼材各種 |
+グロック Gen5 の構造に含まれるすべての公式部品（ピンやスプリング、ネジ等の固定具を含む）は以下の35点に集約されています。
+
+| Pos. Nr. | Item No. | Description (公式名称) |
+| :--- | :--- | :--- |
+| **1** | 43773 | Slide G17 Gen5/FS |
+| **2** | 41002 | Barrel G17 Gen5 / M (または M13.5x1 left) |
+| **3** | 33786 | Recoil spring assembled |
+| **4** | 36618 | Firing pin |
+| **5** | 56 | Spacer sleeve |
+| **6** | 63 | Firing pin spring 24N (silver) |
+| **7** | 70 | Spring cups |
+| **8** | 33781 | Firing pin safety |
+| **9** | 91 | Firing pin safety spring |
+| **10** | 33774 | Extractor (Loaded Chamber Indicator) |
+| **11** | 112 | Extractor depressor plunger |
+| **12** | 33522 | Extractor depressor plunger spring |
+| **13** | 2714 | Spring-loaded bearing (Loaded Chamber Indicator) |
+| **14** | 33784 | Slide cover plate |
+| **15** | 39733 | Rear sight 6,1 GMS polymer |
+| **16** | 7073 | Front sight 4.1 set polymer |
+| **17** | 47985 | Frame G17 Gen5 flared assembled (incl. beavertail set) |
+| **18** | 39543 | Magazine catch spring |
+| **19** | 7534 | Magazine catch reversible |
+| **20** | 39567 | Slide lock spring |
+| **21** | 33706 | Slide lock |
+| **22** | 7894 | Locking block |
+| **23** | 47208 | Trigger mechanism housing with ejector (inc. trigger spring) |
+| **24** | 7965 | Connector 5 (dot) |
+| **25** | 39702 | Trigger with trigger bar AMBI |
+| **26** | 47247 | Slide stop lever AMBI |
+| **27** | 8298 | Trigger pin AMBI |
+| **28** | 1774 | Trigger housing pin SF |
+| **29** | 7416 | Trigger housing pin MBS |
+| **30** | 1587 | Magazine tube |
+| **31** | 5233 | Follower orange |
+| **32** | 33510 | Magazine spring |
+| **33** | 1693 | Magazine insert |
+| **34** | 39283 | Magazine floor plate 01 |
 
 ---
 
-## 🛠️ 組み立て時の注意事項
-1. **公式規格の遵守**: Glock Gen5 のパーツは従来モデルと互換性がありません [1]。組立時は必ず Gen5 専用パーツ（ID #1〜#150）を使用してください。
-2. **工具とネジ山**: 精密ネジの締結には適合するミリサイズの精密ドライバーを使用してください。
+## 🛠️ 製造と組み立てのフロー
+1. **専用ワークステーションの設置**: 銃器プリント台、丸める機械、銃器組立台、スプリング巻き機、CNC精密加工機、射出成形機、ハンマー鍛造機を設置。
+2. **公式パーツの製造**: 上記の Pos.1 〜 Pos.35 のパーツをそれぞれの対応機械で製造（または `/guncraft part <1-34>` で取得）。
+3. **最終組立**: 組立台で設計図とすべての公式パーツを組み上げ、Glock Gen5 本体が完成します。
 
 References:
 [1] [Sportec Glock Gen5 Parts List PDF](https://www.sportec.se/Media/Glock%20Gen5%20skiss%20och%20lista.pdf)
