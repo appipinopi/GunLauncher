@@ -3,17 +3,17 @@ package jp.wolfx.gunlauncher.sample;
 import jp.wolfx.gunlauncher.api.GunRegistry;
 import org.bukkit.plugin.java.JavaPlugin;
 
-/**
- * サンプル銃を GunLauncher に登録するアドオン・プラグインの例です。
- * 実際には別のプラグインとして独立して作成し、depend: [GunLauncher] を指定します。
- */
 public class SampleAddonPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // サンプル銃を登録
+        // すべてのサンプル銃を登録
         GunRegistry.registerGun(new SampleM4A1Gun());
+        GunRegistry.registerGun(new SampleAK47Gun());
+        GunRegistry.registerGun(new SampleM16Gun());
+        GunRegistry.registerGun(new SampleMX7Gun());
+        GunRegistry.registerGun(new SampleInfantryRifleGun());
         
-        getLogger().info("Sample M4A1 Gun has been registered to GunLauncher!");
+        getLogger().info("Sample Guns (M4A1, AK-47, M16, MX7, Infantry Rifle) have been registered!");
     }
 }

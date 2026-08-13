@@ -3,126 +3,44 @@
 GunLauncherは、Minecraft（Spigot / Paper 1.21）向けの**銃追加ランチャーフレームワーク**です。
 GunLauncher単体では銃は存在せず、**弾薬・カスタムパーツ・銃本体を追加する外部プラグイン（アドオン）**を導入することで武器が追加されます。
 
-また、Minecraftの**リソースパック（CustomModelData）**と完全に連携し、3Dモデルやカスタムテクスチャで銃の見た目をリッチに変更可能です。
+---
+
+## 🔫 銃のサンプル一覧と CustomModelData
+
+リポジトリには、リソースパックの `CustomModelData` に対応した以下の銃のサンプル実装が含まれています。
+
+| 銃ID (`id`) | 表示名 | CustomModelData | 特徴 |
+| :--- | :--- | :--- | :--- |
+| `sample:m4a1` | M4A1 Assault Rifle | `1001` | 標準的なアサルトライフル（中ダメージ・中連射） |
+| `sample:ak47` | AK-47 Assault Rifle | `1002` | 高威力・高反動の重厚なアサルトライフル |
+| `sample:m16` | M16 Burst Rifle | `1003` | 3点バースト射撃を行う高精度のライフル |
+| `sample:mx7` | MX7 Submachine Gun | `1004` | 大容量マガジン（50発）と高速連射のSMG |
+| `sample:infantry_rifle` | 歩兵銃 (Infantry Rifle) | `1005` | 一撃必殺の超高ダメージ・低装填数のボルトアクション |
 
 ---
 
-## 🎨 リソースパック（CustomModelData）との連携
+## 💻 外部プラグインでの実装例 (`SampleAddonPlugin.java`)
 
-銃の見た目を変更するには、Minecraftの **`CustomModelData`** 機能とサーバー用リソースパックを組み合わせて使用します。
-
-1. **ベースアイテムの選定**: コード上では `IRON_HORSE_ARMOR` などのアイテムをベースにします。
-2. **CustomModelData の指定**: プラグイン側で `meta.setCustomModelData(1001)` のように固有の数値を付与します。
-3. **リソースパック側の設定**: サーバーに導入するリソースパックの `assets/minecraft/models/item/iron_horse_armor.json` にて、以下のようにオーバーライド設定を行います。
-
-```json
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "item/iron_horse_armor"
-  },
-  "overrides": [
-    { "predicate": { "custom_model_data": 1001 }, "model": "item/gun_m4a1" }
-  ]
-}
-```
-これにより、`custom_model_data: 1001` がついたアイテムは、自動的に `models/item/gun_m4a1.json` の3D/2Dモデル（M4A1）として描画されます。
-
----
-
-## 💻 銃の実装サンプル (`SampleM4A1Gun.java`)
-
-以下は、リポジトリ内に同梱されているリソースパック対応（`CustomModelData = 1001`）のM4A1アサルトライフルの実装サンプルです。
+これらの銃を有効化するには、アドオン側のプラグインで `GunRegistry.registerGun()` を呼び出します。
 
 ```java
 package jp.wolfx.gunlauncher.sample;
 
-import jp.wolfx.gunlauncher.api.CustomGun;
-import jp.wolfx.gunlauncher.GunLauncherPlugin;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Sound;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.util.RayTraceResult;
-import org.bukkit.util.Vector;
+import jp.wolfx.gunlauncher.api.GunRegistry;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public class SampleM4A1Gun implements CustomGun {
-    private final NamespacedKey gunKey = new NamespacedKey(GunLauncherPlugin.getInstance(), "gun_id");
-    private final NamespacedKey ammoKey = new NamespacedKey(GunLauncherPlugin.getInstance(), "gun_ammo");
+public class SampleAddonPlugin extends JavaPlugin {
 
     @Override
-    public String getId() { return "sample:m4a1"; }
-
-    @Override
-    public String getName() { return "§bM4A1 Assault Rifle"; }
-
-    @Override
-    public int getMaxAmmo() { return 30; }
-
-    @Override
-    public ItemStack craftItemStack() {
-        ItemStack item = new ItemStack(Material.IRON_HORSE_ARMOR);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getName()));
-            
-            // ★ リソースパック連動の CustomModelData
-            meta.setCustomModelData(1001);
-            
-            meta.getPersistentDataContainer().set(gunKey, PersistentDataType.STRING, getId());
-            meta.getPersistentDataContainer().set(ammoKey, PersistentDataType.INTEGER, getMaxAmmo());
-            item.setItemMeta(meta);
-        }
-        return item;
-    }
-
-    @Override
-    public void onShoot(Player player, ItemStack gunItem) {
-        ItemMeta meta = gunItem.getItemMeta();
-        if (meta == null) return;
+    public void onEnable() {
+        // すべてのサンプル銃を登録
+        GunRegistry.registerGun(new SampleM4A1Gun());
+        GunRegistry.registerGun(new SampleAK47Gun());
+        GunRegistry.registerGun(new SampleM16Gun());
+        GunRegistry.registerGun(new SampleMX7Gun());
+        GunRegistry.registerGun(new SampleInfantryRifleGun());
         
-        Integer ammo = meta.getPersistentDataContainer().get(ammoKey, PersistentDataType.INTEGER);
-        if (ammo == null || ammo <= 0) {
-            player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_DEPLETE, 1.0f, 1.5f);
-            player.sendMessage("§c弾切れです！スニーク + 右クリックでリロード");
-            return;
-        }
-
-        // 弾を消費
-        meta.getPersistentDataContainer().set(ammoKey, PersistentDataType.INTEGER, ammo - 1);
-        gunItem.setItemMeta(meta);
-
-        // 発射音
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1.5f, 1.0f);
-
-        // 弾道判定（レイキャスト）
-        RayTraceResult result = player.getWorld().rayTraceEntities(player.getEyeLocation(), player.getEyeLocation().getDirection(), 60.0, 0.3, e -> e != player);
-        if (result != null && result.getHitEntity() instanceof LivingEntity) {
-            ((LivingEntity) result.getHitEntity()).damage(7.0, player);
-        }
-    }
-
-    @Override
-    public void onReload(Player player, ItemStack gunItem) {
-        player.playSound(player.getLocation(), Sound.BLOCK_IRON_DOOR_CLOSE, 1.0f, 1.0f);
-        player.sendMessage("§eリロード中...");
-
-        org.bukkit.Bukkit.getScheduler().runTaskLater(GunLauncherPlugin.getInstance(), () -> {
-            if (player.isOnline() && player.getInventory().getItemInMainHand().equals(gunItem)) {
-                ItemMeta meta = gunItem.getItemMeta();
-                if (meta != null) {
-                    meta.getPersistentDataContainer().set(ammoKey, PersistentDataType.INTEGER, getMaxAmmo());
-                    gunItem.setItemMeta(meta);
-                    player.playSound(player.getLocation(), Sound.BLOCK_IRON_DOOR_OPEN, 1.0f, 1.2f);
-                    player.sendMessage("§aリロード完了！");
-                }
-            }
-        }, 40L);
+        getLogger().info("Sample Guns registered successfully!");
     }
 }
 ```
