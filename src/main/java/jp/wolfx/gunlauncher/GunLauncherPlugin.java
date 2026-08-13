@@ -11,6 +11,12 @@ public class GunLauncherPlugin extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        // 1. Initialize built-in famous guns, ammos, and attachments
+        jp.wolfx.gunlauncher.module.BuiltinGunsInitializer.init();
+
+        // 2. Load deep modules from plugins/GunLauncher/modules/
+        jp.wolfx.gunlauncher.module.ModuleLoader.loadModules(this);
+
         GunCommand gunCommand = new GunCommand();
         if (getCommand("gun") != null) {
             getCommand("gun").setExecutor(gunCommand);
@@ -19,8 +25,8 @@ public class GunLauncherPlugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new GunListener(this), this);
 
-        getLogger().info("GunLauncher Core Framework has been enabled successfully.");
-        getLogger().info("Waiting for gun plugins to register via GunRegistry API...");
+        getLogger().info("GunLauncher Deep Engine has been enabled successfully!");
+        getLogger().info("Total Registered Guns: " + jp.wolfx.gunlauncher.api.GunRegistry.getGuns().size());
     }
 
     @Override

@@ -1,3 +1,4 @@
+jp/wolfx/gunlauncher/module/BuiltinGunsInitializer.class
 jp/wolfx/gunlauncher/sample/SampleM16Gun.class
 jp/wolfx/gunlauncher/sample/attachment/SampleAttachments$ExtendedMag.class
 jp/wolfx/gunlauncher/sample/ammo/CaliberAmbos$Ammo762mm.class
@@ -10,6 +11,7 @@ jp/wolfx/gunlauncher/api/Attachment.class
 jp/wolfx/gunlauncher/sample/SampleAK47Gun.class
 jp/wolfx/gunlauncher/api/GunRegistry.class
 jp/wolfx/gunlauncher/api/Ammunition.class
+jp/wolfx/gunlauncher/module/ModuleLoader.class
 jp/wolfx/gunlauncher/sample/ammo/CaliberAmbos$Ammo9mm.class
 jp/wolfx/gunlauncher/sample/guns/AdvancedGunsPart1.class
 jp/wolfx/gunlauncher/sample/attachment/SampleAttachments$ScopeX4.class

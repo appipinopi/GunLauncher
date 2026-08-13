@@ -6,6 +6,8 @@
 /home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/api/ItemRegistry.java
 /home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/command/GunCommand.java
 /home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/listener/GunListener.java
+/home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/module/BuiltinGunsInitializer.java
+/home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/module/ModuleLoader.java
 /home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/sample/SampleAK47Gun.java
 /home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/sample/SampleAddonPlugin.java
 /home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/sample/SampleInfantryRifleGun.java
