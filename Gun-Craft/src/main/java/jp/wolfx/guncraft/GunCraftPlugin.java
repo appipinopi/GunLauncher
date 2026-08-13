@@ -24,10 +24,13 @@ public class GunCraftPlugin extends JavaPlugin {
         AdvancedMachineManager advancedManager = new AdvancedMachineManager(this);
         jp.wolfx.guncraft.manager.ScrewDriveManager screwManager = new jp.wolfx.guncraft.manager.ScrewDriveManager(this);
 
+        jp.wolfx.guncraft.manager.MachineInteractListener interactListener = new jp.wolfx.guncraft.manager.MachineInteractListener(this, printingManager, assemblyManager, advancedManager);
+
         getServer().getPluginManager().registerEvents(printingManager, this);
         getServer().getPluginManager().registerEvents(assemblyManager, this);
         getServer().getPluginManager().registerEvents(advancedManager, this);
         getServer().getPluginManager().registerEvents(screwManager, this);
+        getServer().getPluginManager().registerEvents(interactListener, this);
 
         // Register machine crafting recipes
         jp.wolfx.guncraft.recipe.MachineRecipes.registerRecipes(this);

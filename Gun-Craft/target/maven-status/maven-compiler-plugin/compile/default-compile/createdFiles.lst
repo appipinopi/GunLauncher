@@ -1,5 +1,6 @@
 jp/wolfx/guncraft/item/CraftMaterials.class
 jp/wolfx/guncraft/item/ExpandedGlockPartsRegistry.class
+jp/wolfx/guncraft/manager/MachineInteractListener.class
 jp/wolfx/guncraft/GunCraftPlugin$1.class
 jp/wolfx/guncraft/recipe/MachineRecipes.class
 jp/wolfx/guncraft/GunCraftPlugin.class
