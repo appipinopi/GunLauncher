@@ -1,0 +1,17 @@
+name: GunLauncher
+version: 1.0.0
+main: jp.wolfx.gunlauncher.GunLauncherPlugin
+api-version: '1.21'
+description: Core launcher plugin for custom guns via external gun plugins.
+commands:
+  gun:
+    description: GunLauncher administration and summon command
+    permission: gunlauncher.admin
+    usage: /gun <give|list> <player> <gunId>
+permissions:
+  gunlauncher.admin:
+    description: Allows managing and summoning custom guns
+    default: op
+  gunlauncher.use:
+    description: Allows using custom guns
+    default: true

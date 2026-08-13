@@ -1,0 +1,5 @@
+/home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/GunLauncherPlugin.java
+/home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/api/CustomGun.java
+/home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/api/GunRegistry.java
+/home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/command/GunCommand.java
+/home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/listener/GunListener.java
