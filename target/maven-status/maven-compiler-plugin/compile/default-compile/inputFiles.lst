@@ -12,3 +12,7 @@
 /home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/sample/SampleM16Gun.java
 /home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/sample/SampleM4A1Gun.java
 /home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/sample/SampleMX7Gun.java
+/home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/sample/ammo/CaliberAmbos.java
+/home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/sample/attachment/SampleAttachments.java
+/home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/sample/guns/AdvancedGunsPart1.java
+/home/ubuntu/GunLauncherRepo/src/main/java/jp/wolfx/gunlauncher/sample/guns/AdvancedGunsPart2.java
