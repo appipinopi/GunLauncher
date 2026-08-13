@@ -57,14 +57,24 @@ public class AssemblyAndRollingManager implements Listener {
             if (i != 11 && i != 15) inv.setItem(i, pane);
         }
 
-        // Slot 11: Requires Blueprint
+        // Slot 10: Requires Blueprint
         ItemStack blueprint = CraftMaterials.getPrintedPaper("sample:glock17", "Glock Gen5");
-        inv.setItem(11, blueprint);
+        inv.setItem(10, blueprint);
 
-        // Slot 15: Output Glock 17 Gen5
+        // Slot 13: Requires Proof Load Ammo (工程⑥)
+        ItemStack proofAmmo = jp.wolfx.guncraft.item.ProcessMaterials.getProofLoadAmmo();
+        inv.setItem(13, proofAmmo);
+
+        // Slot 16: Output Glock 17 Gen5 (Tested & Passed)
         CustomGun glock = GunRegistry.getGun("sample:glock17");
         if (glock != null) {
-            inv.setItem(15, glock.craftItemStack());
+            ItemStack output = glock.craftItemStack();
+            ItemMeta outMeta = output.getItemMeta();
+            java.util.List<String> lore = outMeta.hasLore() ? outMeta.getLore() : new java.util.ArrayList<>();
+            lore.add(ChatColor.DARK_RED + "✓ CIPプルーフ弾 ストレステスト合格品");
+            outMeta.setLore(lore);
+            output.setItemMeta(outMeta);
+            inv.setItem(16, output);
         }
 
         player.openInventory(inv);
@@ -86,8 +96,8 @@ public class AssemblyAndRollingManager implements Listener {
                 player.getInventory().addItem(output.clone());
                 player.sendMessage(ChatColor.GREEN + "弾薬の成形に成功しました！");
             }
-        } else if (title.contains("銃器組立台") && slot == 15) {
-            // Check if player has all 34 official parts + blueprint in inventory
+        } else if (title.contains("銃器組立台") && slot == 16) {
+            // Check if player has all 34 official parts + blueprint + proof ammo in inventory
             boolean hasAllParts = true;
             for (int i = 1; i <= 34; i++) {
                 boolean found = false;
@@ -119,13 +129,13 @@ public class AssemblyAndRollingManager implements Listener {
                     }
                 }
 
-                ItemStack gun = inv.getItem(15);
+                ItemStack gun = inv.getItem(16);
                 if (gun != null) {
                     player.getInventory().addItem(gun.clone());
-                    player.sendMessage(ChatColor.GOLD + "公式パーツ全34点を完全に組み上げ、Glock Gen5 本体が完成しました！");
+                    player.sendMessage(ChatColor.GOLD + "工程⑥：プルーフ弾テスト合格！Glock Gen5 の全組み立て工程が完了しました！");
                 }
             } else {
-                player.sendMessage(ChatColor.RED + "Glock Gen5の組み立てには、公式パーツPos.1〜34のすべてが正常な状態で必要です！");
+                player.sendMessage(ChatColor.RED + "Glock Gen5の最終組立には、公式パーツPos.1〜34およびプルーフ弾テストが必要です！");
             }
         }
     }

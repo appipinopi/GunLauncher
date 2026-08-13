@@ -1,12 +1,14 @@
 jp/wolfx/guncraft/item/CraftMaterials.class
 jp/wolfx/guncraft/item/ExpandedGlockPartsRegistry.class
 jp/wolfx/guncraft/manager/MachineInteractListener.class
+jp/wolfx/guncraft/item/ProcessMaterials.class
 jp/wolfx/guncraft/GunCraftPlugin$1.class
 jp/wolfx/guncraft/recipe/MachineRecipes.class
 jp/wolfx/guncraft/GunCraftPlugin.class
 jp/wolfx/guncraft/manager/PrintingTableManager.class
 jp/wolfx/guncraft/manager/AssemblyAndRollingManager.class
 jp/wolfx/guncraft/manager/ScrewDriveManager.class
+jp/wolfx/guncraft/manager/CoatingMachineManager.class
 jp/wolfx/guncraft/item/AdvancedCraftMaterials.class
 jp/wolfx/guncraft/manager/AdvancedMachineManager.class
 jp/wolfx/guncraft/item/PrecisionToolsRegistry.class
