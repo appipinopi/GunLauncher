@@ -3,21 +3,18 @@ package jp.wolfx.guncraft.manager;
 import jp.wolfx.gunmain.api.CustomGun;
 import jp.wolfx.gunmain.api.GunRegistry;
 import jp.wolfx.guncraft.item.CraftMaterials;
+import jp.wolfx.guncraft.item.ExpandedGlockPartsRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
-
-import java.util.List;
 
 public class AssemblyAndRollingManager implements Listener {
     private final Plugin plugin;
@@ -37,14 +34,12 @@ public class AssemblyAndRollingManager implements Listener {
             if (i != 11 && i != 13 && i != 15) inv.setItem(i, pane);
         }
 
-        // Slot 11: Brass
         inv.setItem(11, CraftMaterials.getBrass());
-        // Slot 13: Lead Bullet
         inv.setItem(13, CraftMaterials.getLeadBullet());
-        // Slot 15: Output Ammo
+        
         ItemStack ammo = new ItemStack(Material.PAPER, 16);
         ItemMeta ammoMeta = ammo.getItemMeta();
-        ammoMeta.setDisplayName(ChatColor.YELLOW + "完成した弾薬 x16");
+        ammoMeta.setDisplayName(ChatColor.YELLOW + "9mm Parabellum 弾薬 x16");
         ammo.setItemMeta(ammoMeta);
         inv.setItem(15, ammo);
 
@@ -52,7 +47,7 @@ public class AssemblyAndRollingManager implements Listener {
     }
 
     public void openAssemblyTable(Player player) {
-        Inventory inv = Bukkit.createInventory(null, 27, ChatColor.GOLD + "銃器組立台 (100部品アセンブラ)");
+        Inventory inv = Bukkit.createInventory(null, 27, ChatColor.GOLD + "銃器組立台 (Glock Gen5 最終組立)");
         
         ItemStack pane = new ItemStack(Material.ORANGE_STAINED_GLASS_PANE);
         ItemMeta meta = pane.getItemMeta();
@@ -62,12 +57,11 @@ public class AssemblyAndRollingManager implements Listener {
             if (i != 11 && i != 15) inv.setItem(i, pane);
         }
 
-        // Slot 11: Requires 100 Glock Printed Papers / Parts
-        ItemStack req = CraftMaterials.getPrintedPaper("sample:glock17", "Glock 17 (9mm)");
-        req.setAmount(100);
-        inv.setItem(11, req);
+        // Slot 11: Requires Blueprint
+        ItemStack blueprint = CraftMaterials.getPrintedPaper("sample:glock17", "Glock Gen5");
+        inv.setItem(11, blueprint);
 
-        // Slot 15: Output Glock 17 Gun
+        // Slot 15: Output Glock 17 Gen5
         CustomGun glock = GunRegistry.getGun("sample:glock17");
         if (glock != null) {
             inv.setItem(15, glock.craftItemStack());
@@ -90,30 +84,48 @@ public class AssemblyAndRollingManager implements Listener {
             ItemStack output = inv.getItem(15);
             if (output != null) {
                 player.getInventory().addItem(output.clone());
-                player.sendMessage(ChatColor.GREEN + "弾薬の作成に成功しました！");
+                player.sendMessage(ChatColor.GREEN + "弾薬の成形に成功しました！");
             }
         } else if (title.contains("銃器組立台") && slot == 15) {
-            // Check if player has 100 printed papers in inventory
-            boolean has100 = false;
-            for (ItemStack item : player.getInventory().getContents()) {
-                if (item != null && item.getType() == Material.PAPER && item.hasItemMeta() && item.getItemMeta().hasLore()) {
-                    List<String> lore = item.getItemMeta().getLore();
-                    if (lore != null && lore.stream().anyMatch(l -> l.contains("ターゲットID")) && item.getAmount() >= 100) {
-                        has100 = true;
-                        item.setAmount(item.getAmount() - 100);
-                        break;
+            // Check if player has all 34 official parts + blueprint in inventory
+            boolean hasAllParts = true;
+            for (int i = 1; i <= 34; i++) {
+                boolean found = false;
+                for (ItemStack item : player.getInventory().getContents()) {
+                    if (item != null && item.hasItemMeta() && item.getItemMeta().hasCustomModelData()) {
+                        if (item.getItemMeta().getCustomModelData() == 7000 + i) {
+                            found = true;
+                            break;
+                        }
                     }
+                }
+                if (!found) {
+                    hasAllParts = false;
+                    player.sendMessage(ChatColor.RED + "不足している公式パーツがあります: Pos." + i + " " + ExpandedGlockPartsRegistry.getPartName(i));
+                    break;
                 }
             }
 
-            if (has100) {
+            if (hasAllParts) {
+                // Consume 1-34 parts from inventory
+                for (int i = 1; i <= 34; i++) {
+                    for (ItemStack item : player.getInventory().getContents()) {
+                        if (item != null && item.hasItemMeta() && item.getItemMeta().hasCustomModelData()) {
+                            if (item.getItemMeta().getCustomModelData() == 7000 + i) {
+                                item.setAmount(item.getAmount() - 1);
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 ItemStack gun = inv.getItem(15);
                 if (gun != null) {
                     player.getInventory().addItem(gun.clone());
-                    player.sendMessage(ChatColor.GOLD + "100個の部品を組み上げ、銃の本体が完成しました！");
+                    player.sendMessage(ChatColor.GOLD + "公式パーツ全34点を完全に組み上げ、Glock Gen5 本体が完成しました！");
                 }
             } else {
-                player.sendMessage(ChatColor.RED + "銃の組み立てには、最低100枚のプリント済み設計図が必要です！");
+                player.sendMessage(ChatColor.RED + "Glock Gen5の組み立てには、公式パーツPos.1〜34のすべてが正常な状態で必要です！");
             }
         }
     }

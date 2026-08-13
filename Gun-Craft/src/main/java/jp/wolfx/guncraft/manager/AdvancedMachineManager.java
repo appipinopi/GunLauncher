@@ -1,6 +1,6 @@
 package jp.wolfx.guncraft.manager;
 
-import jp.wolfx.guncraft.item.AdvancedCraftMaterials;
+import jp.wolfx.guncraft.item.ExpandedGlockPartsRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -20,44 +20,49 @@ public class AdvancedMachineManager implements Listener {
         this.plugin = plugin;
     }
 
+    // 1. スプリング巻き機 (Pos. 3, 6, 9, 12, 18, 20, 32)
     public void openSpringCoiler(Player player) {
         Inventory inv = Bukkit.createInventory(null, 27, ChatColor.LIGHT_PURPLE + "スプリング巻き機 (Spring Coiler)");
-        setupMachineGUI(inv, Material.IRON_BARS, "スプリング部品");
+        setupPartSelectorGUI(inv, new int[]{3, 6, 9, 12, 18, 20, 32}, "スプリング製造");
         player.openInventory(inv);
     }
 
+    // 2. CNC精密加工機 (スライド、トリガー、ピン等)
     public void openCncMachine(Player player) {
-        Inventory inv = Bukkit.createInventory(null, 27, ChatColor.AQUA + "CNC精密加工機 (CNC Machine)");
-        setupMachineGUI(inv, Material.IRON_INGOT, "金属削り出し部品 (スライド/トリガー)");
+        Inventory inv = Bukkit.createInventory(null, 45, ChatColor.AQUA + "CNC精密加工機 (CNC Machine)");
+        setupPartSelectorGUI(inv, new int[]{1, 4, 5, 8, 10, 11, 13, 14, 15, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 33, 34}, "CNC金属削り出し");
         player.openInventory(inv);
     }
 
+    // 3. 射出成形機 (フレーム、ビーバーテイル等 Pos. 16, 17)
     public void openInjectionMolder(Player player) {
         Inventory inv = Bukkit.createInventory(null, 27, ChatColor.GOLD + "射出成形機 (Injection Molder)");
-        setupMachineGUI(inv, Material.BLACK_CONCRETE, "ポリマーフレーム");
+        setupPartSelectorGUI(inv, new int[]{16, 17}, "ポリマーフレーム成形");
         player.openInventory(inv);
     }
 
+    // 4. ハンマー鍛造機 (バレル Pos. 2)
     public void openHammerForge(Player player) {
         Inventory inv = Bukkit.createInventory(null, 27, ChatColor.RED + "ハンマー鍛造機 (Hammer Forge)");
-        setupMachineGUI(inv, Material.NETHERITE_INGOT, "高精度バレル (銃身)");
+        setupPartSelectorGUI(inv, new int[]{2}, "バレル鍛造");
         player.openInventory(inv);
     }
 
-    private void setupMachineGUI(Inventory inv, Material inputMat, String categoryName) {
+    private void setupPartSelectorGUI(Inventory inv, int[] partIds, String title) {
         ItemStack pane = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta meta = pane.getItemMeta();
         meta.setDisplayName(" ");
         pane.setItemMeta(meta);
-        for (int i = 0; i < 27; i++) {
-            if (i != 11 && i != 15) inv.setItem(i, pane);
+        for (int i = 0; i < inv.getSize(); i++) {
+            inv.setItem(i, pane);
         }
 
-        // Slot 11: Raw Material
-        inv.setItem(11, new ItemStack(inputMat, 1));
-
-        // Slot 15: Output Part (e.g. Normal or Damaged check)
-        inv.setItem(15, AdvancedCraftMaterials.getPartCategory(categoryName, 1, false));
+        int slot = 0;
+        for (int id : partIds) {
+            if (slot < inv.getSize() - 1) {
+                inv.setItem(slot++, ExpandedGlockPartsRegistry.getPart(id, false));
+            }
+        }
     }
 
     @EventHandler
@@ -67,16 +72,11 @@ public class AdvancedMachineManager implements Listener {
             !title.contains("射出成形機") && !title.contains("ハンマー鍛造機")) return;
         event.setCancelled(true);
 
-        Player player = (Player) event.getWhoClicked();
-        Inventory inv = event.getInventory();
-        int slot = event.getRawSlot();
-
-        if (slot == 15) {
-            ItemStack output = inv.getItem(15);
-            if (output != null) {
-                player.getInventory().addItem(output.clone());
-                player.sendMessage(ChatColor.GREEN + "専用の精密部品の製造に成功しました！");
-            }
+        ItemStack clicked = event.getCurrentItem();
+        if (clicked != null && clicked.hasItemMeta() && clicked.getItemMeta().hasDisplayName()) {
+            Player player = (Player) event.getWhoClicked();
+            player.getInventory().addItem(clicked.clone());
+            player.sendMessage(ChatColor.GREEN + "パーツを製造しました: " + clicked.getItemMeta().getDisplayName());
         }
     }
 }
