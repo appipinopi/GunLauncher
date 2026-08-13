@@ -1,5 +1,8 @@
 jp/wolfx/gunlauncher/command/GunCommand.class
-jp/wolfx/gunlauncher/api/GunRegistry.class
 jp/wolfx/gunlauncher/api/CustomGun.class
-jp/wolfx/gunlauncher/GunLauncherPlugin.class
 jp/wolfx/gunlauncher/listener/GunListener.class
+jp/wolfx/gunlauncher/api/Attachment.class
+jp/wolfx/gunlauncher/api/GunRegistry.class
+jp/wolfx/gunlauncher/GunLauncherPlugin.class
+jp/wolfx/gunlauncher/api/Ammunition.class
+jp/wolfx/gunlauncher/api/ItemRegistry.class

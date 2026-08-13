@@ -1,35 +1,35 @@
 # GunLauncher (Core Framework)
 
 GunLauncherは、Minecraft（Spigot / Paper 1.21）向けの**銃追加ランチャーフレームワーク**です。
-GunLauncher単体では銃は存在せず、別の「銃追加プラグイン（アドオン）」を導入することで初めて武器が追加されます。
+GunLauncher自体には銃は含まれておらず、**弾薬・カスタムパーツ・銃本体を追加する外部プラグイン（アドオン）**を導入することで、高度な銃撃戦システムを構築できます。
 
 ---
 
-## アーキテクチャと仕組み
+## 拡張機能とAPI
 
-1. **GunLauncher（コア）**: コマンド（`/gun give`, `/gun list`）やイベント管理、APIレジストリを提供します。
-2. **拡張プラグイン（アドオン）**: 開発者はGunLauncherを依存関係（`depend` または `softdepend`）に指定し、Javaコードで独自の銃を定義・登録します。
+### 1. 弾薬システム (`Ammunition`)
+他のプラグインから `ItemRegistry.registerAmmo(...)` を呼び出すことで、カスタム弾薬を追加できます。
+- プレイヤーは `/gun ammo <player> <ammoId> [amount]` で弾薬を獲得できます。
+
+### 2. カスタムパーツシステム (`Attachment`)
+スコープやサイレンサー、拡張マガジンなどのアタッチメントを作成・登録できます。
+- パーツの種類 (`SCOPE`, `BARREL`, `MAGAZINE`, `STOCK`) ごとに、ダメージボーナスや弾数ボーナスを設定可能です。
+- **装着方法**: オフハンドにパーツを持ち、スニークしながら銃を右クリックすることで銃に装着できます。
 
 ---
 
-## 外部プラグイン開発者向けガイド（銃の追加方法）
+## 外部プラグイン開発者向けガイド
 
-他の開発者が独自の銃を追加するプラグイン（例: `SampleGunAddon`）を作成する手順は以下の通りです。
+### サンプル: 弾薬とカスタムパーツの作成
 
-### 1. `plugin.yml` の設定
-```yaml
-name: SampleGunAddon
-version: 1.0.0
-main: com.example.samplegun.SampleGunPlugin
-api-version: '1.21'
-depend: [GunLauncher]
-```
-
-### 2. `CustomGun` インターフェースの実装
 ```java
 package com.example.samplegun;
 
+import jp.wolfx.gunlauncher.api.Ammunition;
+import jp.wolfx.gunlauncher.api.Attachment;
 import jp.wolfx.gunlauncher.api.CustomGun;
+import jp.wolfx.gunlauncher.api.ItemRegistry;
+import jp.wolfx.gunlauncher.api.GunRegistry;
 import jp.wolfx.gunlauncher.GunLauncherPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -39,66 +39,55 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-public class M4A1Gun implements CustomGun {
-    private final NamespacedKey gunKey = new NamespacedKey(GunLauncherPlugin.getInstance(), "gun_id");
-
-    @Override
-    public String getId() {
-        return "sample:m4a1";
-    }
-
-    @Override
-    public String getName() {
-        return "§bM4A1 Assault Rifle";
-    }
-
-    @Override
-    public ItemStack craftItemStack() {
-        ItemStack item = new ItemStack(Material.IRON_HORSE_ARMOR);
+// 1. 弾薬の実装
+public class Ammo9mm implements Ammunition {
+    @Override public String getId() { return "sample:ammo_9mm"; }
+    @Override public String getName() { return "§79mm Ammo"; }
+    @Override public ItemStack craftItemStack(int amount) {
+        ItemStack item = new ItemStack(Material.PAPER, amount);
         ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getName()));
-            meta.setCustomModelData(1001);
-            meta.getPersistentDataContainer().set(gunKey, PersistentDataType.STRING, getId());
-            item.setItemMeta(meta);
-        }
+        meta.setDisplayName(getName());
+        item.setItemMeta(meta);
         return item;
     }
-
-    @Override
-    public void onShoot(Player player, ItemStack gunItem) {
-        player.sendMessage("§cBang! Shot fired from M4A1.");
-        player.getWorld().playSound(player.getLocation(), org.bukkit.Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1.5f, 1.0f);
-    }
-
-    @Override
-    public void onReload(Player player, ItemStack gunItem) {
-        player.sendMessage("§eReloading M4A1...");
-        player.getWorld().playSound(player.getLocation(), org.bukkit.Sound.BLOCK_IRON_DOOR_CLOSE, 1.0f, 1.0f);
+    @Override public boolean matches(ItemStack item) {
+        return item != null && item.getType() == Material.PAPER && item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(getName());
     }
 }
-```
 
-### 3. プラグイン有効化時に登録
-```java
-package com.example.samplegun;
+// 2. カスタムパーツ（拡張マガジン）の実装
+public class ExtendedMag implements Attachment {
+    @Override public String getId() { return "sample:extended_mag"; }
+    @Override public String getSlot() { return "MAGAZINE"; }
+    @Override public String getName() { return "§dExtended Mag (+15 Ammo)"; }
+    @Override public int getAmmoBonus() { return 15; }
+    @Override public ItemStack craftItemStack() {
+        ItemStack item = new ItemStack(Material.IRON_INGOT);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(getName());
+        item.setItemMeta(meta);
+        return item;
+    }
+    @Override public boolean matches(ItemStack item) {
+        return item != null && item.getType() == Material.IRON_INGOT && item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(getName());
+    }
+}
 
-import jp.wolfx.gunlauncher.api.GunRegistry;
-import org.bukkit.plugin.java.JavaPlugin;
-
-public class SampleGunPlugin extends JavaPlugin {
+// 3. プラグイン有効化時に登録
+public class SampleGunPlugin extends org.bukkit.plugin.java.JavaPlugin {
     @Override
     public void onEnable() {
-        // 銃を登録
-        GunRegistry.registerGun(new M4A1Gun());
-        getLogger().info("Sample M4A1 gun registered successfully!");
+        ItemRegistry.registerAmmo(new Ammo9mm());
+        ItemRegistry.registerAttachment(new ExtendedMag());
+        getLogger().info("Ammo and attachments registered!");
     }
 }
 ```
 
 ---
 
-## コマンド
-初期状態では、召喚および管理用コマンドのみが提供されます。
-- `/gun give <player> <gunId>` - 指定したプレイヤーにカスタム銃を配布します。
-- `/gun list` - 登録されているすべての銃の一覧を表示します。
+## コマンド一覧
+- `/gun give <player> <gunId>` - 銃を配布
+- `/gun ammo <player> <ammoId> [amount]` - 弾薬を配布
+- `/gun part <player> <partId>` - カスタムパーツを配布
+- `/gun list` - 登録されているすべての銃・弾薬・パーツの一覧を表示
