@@ -1,5 +1,6 @@
 package jp.wolfx.guncraft;
 
+import jp.wolfx.guncraft.manager.AdvancedMachineManager;
 import jp.wolfx.guncraft.manager.AssemblyAndRollingManager;
 import jp.wolfx.guncraft.manager.PrintingTableManager;
 import org.bukkit.ChatColor;
@@ -19,9 +20,11 @@ public class GunCraftPlugin extends JavaPlugin {
         instance = this;
         printingManager = new PrintingTableManager(this);
         assemblyManager = new AssemblyAndRollingManager(this);
+        AdvancedMachineManager advancedManager = new AdvancedMachineManager(this);
 
         getServer().getPluginManager().registerEvents(printingManager, this);
         getServer().getPluginManager().registerEvents(assemblyManager, this);
+        getServer().getPluginManager().registerEvents(advancedManager, this);
 
         // Register machine crafting recipes
         jp.wolfx.guncraft.recipe.MachineRecipes.registerRecipes(this);
@@ -49,6 +52,14 @@ public class GunCraftPlugin extends JavaPlugin {
                     assemblyManager.openRollingMachine(player);
                 } else if (sub.equals("assemble")) {
                     assemblyManager.openAssemblyTable(player);
+                } else if (sub.equals("spring")) {
+                    advancedManager.openSpringCoiler(player);
+                } else if (sub.equals("cnc")) {
+                    advancedManager.openCncMachine(player);
+                } else if (sub.equals("mold")) {
+                    advancedManager.openInjectionMolder(player);
+                } else if (sub.equals("forge")) {
+                    advancedManager.openHammerForge(player);
                 } else {
                     player.sendMessage(ChatColor.RED + "Unknown subcommand.");
                 }
