@@ -23,7 +23,10 @@ public class GunCraftPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(printingManager, this);
         getServer().getPluginManager().registerEvents(assemblyManager, this);
 
-        getLogger().info("=== Gun-Craft (Manufacturing & Blueprint System) Enabled ===");
+        // Register machine crafting recipes
+        jp.wolfx.guncraft.recipe.MachineRecipes.registerRecipes(this);
+
+        getLogger().info("=== Gun-Craft (Advanced Manufacturing & Workstations) Enabled ===");
 
         getCommand("guncraft").setExecutor(new CommandExecutor() {
             @Override
