@@ -5,4 +5,5 @@ jp/wolfx/guncraft/item/AdvancedCraftMaterials.class
 jp/wolfx/guncraft/item/CraftMaterials.class
 jp/wolfx/guncraft/manager/AdvancedMachineManager.class
 jp/wolfx/guncraft/GunCraftPlugin$1.class
+jp/wolfx/guncraft/item/GlockPartsRegistry.class
 jp/wolfx/guncraft/recipe/MachineRecipes.class

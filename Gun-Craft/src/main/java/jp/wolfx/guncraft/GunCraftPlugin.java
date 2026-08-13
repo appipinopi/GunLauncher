@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -60,6 +61,23 @@ public class GunCraftPlugin extends JavaPlugin {
                     advancedManager.openInjectionMolder(player);
                 } else if (sub.equals("forge")) {
                     advancedManager.openHammerForge(player);
+                } else if (sub.equals("part")) {
+                    if (args.length < 2) {
+                        player.sendMessage("§cUsage: /guncraft part <1-100>");
+                        return true;
+                    }
+                    try {
+                        int partId = Integer.parseInt(args[1]);
+                        if (partId < 1 || partId > 100) {
+                            player.sendMessage("§cPart ID must be between 1 and 100.");
+                            return true;
+                        }
+                        ItemStack part = jp.wolfx.guncraft.item.GlockPartsRegistry.getPart(partId, false);
+                        player.getInventory().addItem(part);
+                        player.sendMessage("§aAdded " + part.getItemMeta().getDisplayName() + " (CMD: " + part.getItemMeta().getCustomModelData() + ")");
+                    } catch (NumberFormatException e) {
+                        player.sendMessage("§cInvalid part ID number.");
+                    }
                 } else {
                     player.sendMessage(ChatColor.RED + "Unknown subcommand.");
                 }
