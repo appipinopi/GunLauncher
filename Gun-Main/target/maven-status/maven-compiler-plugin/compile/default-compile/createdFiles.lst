@@ -1,3 +1,4 @@
 jp/wolfx/gunmain/GunMainPlugin.class
+jp/wolfx/gunmain/sample/SampleGlock17Gun.class
 jp/wolfx/gunmain/api/CustomGun.class
 jp/wolfx/gunmain/api/GunRegistry.class

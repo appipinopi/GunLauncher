@@ -62,15 +62,15 @@ public class AssemblyAndRollingManager implements Listener {
             if (i != 11 && i != 15) inv.setItem(i, pane);
         }
 
-        // Slot 11: Requires 100 Printed Papers
-        ItemStack req = CraftMaterials.getPrintedPaper("sample:m4a1", "M4A1 Assault Rifle");
+        // Slot 11: Requires 100 Glock Printed Papers / Parts
+        ItemStack req = CraftMaterials.getPrintedPaper("sample:glock17", "Glock 17 (9mm)");
         req.setAmount(100);
         inv.setItem(11, req);
 
-        // Slot 15: Output Gun
-        if (!GunRegistry.getGuns().isEmpty()) {
-            CustomGun first = GunRegistry.getGuns().iterator().next();
-            inv.setItem(15, first.craftItemStack());
+        // Slot 15: Output Glock 17 Gun
+        CustomGun glock = GunRegistry.getGun("sample:glock17");
+        if (glock != null) {
+            inv.setItem(15, glock.craftItemStack());
         }
 
         player.openInventory(inv);

@@ -16,6 +16,9 @@ public class GunMainPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        // Register Glock 17 as a built-in gun
+        jp.wolfx.gunmain.api.GunRegistry.registerGun(new jp.wolfx.gunmain.sample.SampleGlock17Gun());
+
         getLogger().info("=== Gun-Main (Core & Official Patch) Enabled ===");
 
         // Load external modules/addons from plugins/Gun-Main/modules/
