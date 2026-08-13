@@ -1,0 +1,11 @@
+name: Gun-Craft
+version: 1.0.0
+main: jp.wolfx.guncraft.GunCraftPlugin
+api-version: '1.21'
+depend: [Gun-Main]
+description: Crafting and blueprint management plugin for manufacturing guns.
+commands:
+  guncraft:
+    description: Gun-Craft main command
+    permission: gun.admin
+    usage: /guncraft <blueprint|give>

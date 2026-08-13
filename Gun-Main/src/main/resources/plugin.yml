@@ -1,0 +1,17 @@
+name: Gun-Main
+version: 1.0.0
+main: jp.wolfx.gunmain.GunMainPlugin
+api-version: '1.21'
+description: Mandatory core engine and official patch for the gun ecosystem.
+commands:
+  gunmain:
+    description: Gun-Main management command
+    permission: gun.admin
+    usage: /gunmain <reload|status>
+permissions:
+  gun.admin:
+    description: Allows administering gun plugins
+    default: op
+  gun.use:
+    description: Allows using guns
+    default: true

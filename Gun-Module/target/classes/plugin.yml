@@ -1,0 +1,11 @@
+name: Gun-Module
+version: 1.0.0
+main: jp.wolfx.gunmodule.GunModulePlugin
+api-version: '1.21'
+depend: [Gun-Main]
+description: Module plugin providing custom attachments, parts, and tactical items.
+commands:
+  gunmodule:
+    description: Gun-Module command
+    permission: gun.admin
+    usage: /gunmodule <give|list>

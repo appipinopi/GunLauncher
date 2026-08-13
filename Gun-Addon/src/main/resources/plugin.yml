@@ -1,0 +1,6 @@
+name: Gun-Addon
+version: 1.0.0
+main: jp.wolfx.gunaddon.GunAddonPlugin
+api-version: '1.21'
+depend: [Gun-Main, Gun-Module]
+description: Addon plugin template for personal gun modifications and custom weapons.
