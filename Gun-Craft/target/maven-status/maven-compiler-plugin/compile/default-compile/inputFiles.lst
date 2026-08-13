@@ -1,1 +1,4 @@
 /home/ubuntu/GunLauncherRepo/Gun-Craft/src/main/java/jp/wolfx/guncraft/GunCraftPlugin.java
+/home/ubuntu/GunLauncherRepo/Gun-Craft/src/main/java/jp/wolfx/guncraft/item/CraftMaterials.java
+/home/ubuntu/GunLauncherRepo/Gun-Craft/src/main/java/jp/wolfx/guncraft/manager/AssemblyAndRollingManager.java
+/home/ubuntu/GunLauncherRepo/Gun-Craft/src/main/java/jp/wolfx/guncraft/manager/PrintingTableManager.java

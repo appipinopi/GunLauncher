@@ -1,31 +1,29 @@
 package jp.wolfx.guncraft;
 
-import jp.wolfx.gunmain.api.CustomGun;
-import jp.wolfx.gunmain.api.GunRegistry;
+import jp.wolfx.guncraft.manager.AssemblyAndRollingManager;
+import jp.wolfx.guncraft.manager.PrintingTableManager;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GunCraftPlugin extends JavaPlugin {
     private static GunCraftPlugin instance;
-    private NamespacedKey blueprintKey;
+    private PrintingTableManager printingManager;
+    private AssemblyAndRollingManager assemblyManager;
 
     @Override
     public void onEnable() {
         instance = this;
-        blueprintKey = new NamespacedKey(this, "blueprint_gun_id");
-        getLogger().info("=== Gun-Craft (Manufacturing System) Enabled ===");
+        printingManager = new PrintingTableManager(this);
+        assemblyManager = new AssemblyAndRollingManager(this);
+
+        getServer().getPluginManager().registerEvents(printingManager, this);
+        getServer().getPluginManager().registerEvents(assemblyManager, this);
+
+        getLogger().info("=== Gun-Craft (Manufacturing & Blueprint System) Enabled ===");
 
         getCommand("guncraft").setExecutor(new CommandExecutor() {
             @Override
@@ -33,32 +31,23 @@ public class GunCraftPlugin extends JavaPlugin {
                 if (!(sender instanceof Player)) return true;
                 Player player = (Player) sender;
 
-                if (args.length < 2) {
-                    player.sendMessage("§cUsage: /guncraft blueprint <gunId>");
+                if (args.length == 0) {
+                    player.sendMessage(ChatColor.GOLD + "--- Gun-Craft Commands ---");
+                    player.sendMessage(ChatColor.YELLOW + "/guncraft print " + ChatColor.GRAY + "- Open Printing Table");
+                    player.sendMessage(ChatColor.YELLOW + "/guncraft roll " + ChatColor.GRAY + "- Open Rolling Machine");
+                    player.sendMessage(ChatColor.YELLOW + "/guncraft assemble " + ChatColor.GRAY + "- Open Gun Assembly Table (100 parts)");
                     return true;
                 }
 
                 String sub = args[0].toLowerCase();
-                if (sub.equals("blueprint")) {
-                    String gunId = args[1];
-                    CustomGun gun = GunRegistry.getGun(gunId);
-                    if (gun == null) {
-                        player.sendMessage("§cGun ID '" + gunId + "' not found.");
-                        return true;
-                    }
-
-                    ItemStack blueprint = new ItemStack(Material.PAPER);
-                    ItemMeta meta = blueprint.getItemMeta();
-                    meta.setDisplayName(ChatColor.GOLD + "Blueprint: " + gun.getName());
-                    List<String> lore = new ArrayList<>();
-                    lore.add("§7Right-click to assemble this gun!");
-                    lore.add("§8Target ID: " + gun.getId());
-                    meta.setLore(lore);
-                    meta.getPersistentDataContainer().set(blueprintKey, PersistentDataType.STRING, gun.getId());
-                    blueprint.setItemMeta(meta);
-
-                    player.getInventory().addItem(blueprint);
-                    player.sendMessage("§aCreated blueprint for " + gun.getName() + "!");
+                if (sub.equals("print")) {
+                    printingManager.openPrintingTable(player);
+                } else if (sub.equals("roll")) {
+                    assemblyManager.openRollingMachine(player);
+                } else if (sub.equals("assemble")) {
+                    assemblyManager.openAssemblyTable(player);
+                } else {
+                    player.sendMessage(ChatColor.RED + "Unknown subcommand.");
                 }
                 return true;
             }
