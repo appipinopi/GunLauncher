@@ -1,42 +1,6 @@
-# GunLauncher (Core Framework)
-
-GunLauncherは、Minecraft（Spigot / Paper 1.21）向けの**銃追加ランチャーフレームワーク**です。
-GunLauncher単体では銃は存在せず、**弾薬・カスタムパーツ・銃本体を追加する外部プラグイン（アドオン）**を導入することで武器が追加されます。
-
-また、Minecraftの**リソースパック（CustomModelData）**と完全に連携し、3Dモデルやカスタムテクスチャで銃の見た目をリッチに変更可能です。
-
----
-
-## 🎨 リソースパック（CustomModelData）との連携
-
-銃の見た目を変更するには、Minecraftの **`CustomModelData`** 機能とサーバー用リソースパックを組み合わせて使用します。
-
-1. **ベースアイテムの選定**: コード上では `IRON_HORSE_ARMOR` などのアイテムをベースにします。
-2. **CustomModelData の指定**: プラグイン側で `meta.setCustomModelData(1001)` のように固有の数値を付与します。
-3. **リソースパック側の設定**: サーバーに導入するリソースパックの `assets/minecraft/models/item/iron_horse_armor.json` にて、以下のようにオーバーライド設定を行います。
-
-```json
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "item/iron_horse_armor"
-  },
-  "overrides": [
-    { "predicate": { "custom_model_data": 1001 }, "model": "item/gun_m4a1" }
-  ]
-}
-```
-これにより、`custom_model_data: 1001` がついたアイテムは、自動的に `models/item/gun_m4a1.json` の3D/2Dモデル（M4A1）として描画されます。
-
----
-
-## 💻 銃の実装サンプル (`SampleM4A1Gun.java`)
-
-以下は、リポジトリ内に同梱されているリソースパック対応（`CustomModelData = 1001`）のM4A1アサルトライフルの実装サンプルです。
-
-```java
 package jp.wolfx.gunlauncher.sample;
 
+import jp.wolfx.gunlauncher.api.Ammunition;
 import jp.wolfx.gunlauncher.api.CustomGun;
 import jp.wolfx.gunlauncher.GunLauncherPlugin;
 import org.bukkit.ChatColor;
@@ -56,26 +20,36 @@ public class SampleM4A1Gun implements CustomGun {
     private final NamespacedKey ammoKey = new NamespacedKey(GunLauncherPlugin.getInstance(), "gun_ammo");
 
     @Override
-    public String getId() { return "sample:m4a1"; }
+    public String getId() {
+        return "sample:m4a1";
+    }
 
     @Override
-    public String getName() { return "§bM4A1 Assault Rifle"; }
+    public String getName() {
+        return "§bM4A1 Assault Rifle";
+    }
 
     @Override
-    public int getMaxAmmo() { return 30; }
+    public int getMaxAmmo() {
+        return 30;
+    }
 
     @Override
     public ItemStack craftItemStack() {
+        // リソースパックでモデルを変更しやすいようにアイアンホースアーマーや各種アイテムを使用
         ItemStack item = new ItemStack(Material.IRON_HORSE_ARMOR);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', getName()));
             
-            // ★ リソースパック連動の CustomModelData
+            // ★ リソースパック連動の要: CustomModelData
+            // リソースパック側で assets/minecraft/models/item/iron_horse_armor.json に
+            // overrides で custom_model_data: 1001 の時のテクスチャを指定します。
             meta.setCustomModelData(1001);
             
             meta.getPersistentDataContainer().set(gunKey, PersistentDataType.STRING, getId());
             meta.getPersistentDataContainer().set(ammoKey, PersistentDataType.INTEGER, getMaxAmmo());
+            
             item.setItemMeta(meta);
         }
         return item;
@@ -83,41 +57,55 @@ public class SampleM4A1Gun implements CustomGun {
 
     @Override
     public void onShoot(Player player, ItemStack gunItem) {
+        // 残弾数の確認と消費
         ItemMeta meta = gunItem.getItemMeta();
         if (meta == null) return;
         
         Integer ammo = meta.getPersistentDataContainer().get(ammoKey, PersistentDataType.INTEGER);
         if (ammo == null || ammo <= 0) {
             player.playSound(player.getLocation(), Sound.BLOCK_RESPAWN_ANCHOR_DEPLETE, 1.0f, 1.5f);
-            player.sendMessage("§c弾切れです！スニーク + 右クリックでリロード");
+            player.sendMessage("§c弾切れです！リロードしてください (スニーク + 右クリック)");
             return;
         }
 
-        // 弾を消費
+        // 弾を1発消費
         meta.getPersistentDataContainer().set(ammoKey, PersistentDataType.INTEGER, ammo - 1);
         gunItem.setItemMeta(meta);
 
-        // 発射音
+        // 発射音とパーティクル
         player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1.5f, 1.0f);
 
-        // 弾道判定（レイキャスト）
-        RayTraceResult result = player.getWorld().rayTraceEntities(player.getEyeLocation(), player.getEyeLocation().getDirection(), 60.0, 0.3, e -> e != player);
+        // レイキャストによる弾道判定
+        var eyeLoc = player.getEyeLocation();
+        Vector dir = eyeLoc.getDirection();
+        double range = 60.0;
+        double damage = 7.0;
+
+        RayTraceResult result = player.getWorld().rayTraceEntities(eyeLoc, dir, range, 0.3, e -> e != player);
         if (result != null && result.getHitEntity() instanceof LivingEntity) {
-            ((LivingEntity) result.getHitEntity()).damage(7.0, player);
+            LivingEntity target = (LivingEntity) result.getHitEntity();
+            target.damage(damage, player);
         }
+
+        player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR, 
+            net.md_5.bungee.api.chat.TextComponent.fromLegacy("§eAmmo: " + (ammo - 1) + " / " + getMaxAmmo()));
     }
 
     @Override
     public void onReload(Player player, ItemStack gunItem) {
+        ItemMeta meta = gunItem.getItemMeta();
+        if (meta == null) return;
+
         player.playSound(player.getLocation(), Sound.BLOCK_IRON_DOOR_CLOSE, 1.0f, 1.0f);
         player.sendMessage("§eリロード中...");
 
+        // 2秒後に弾を補充
         org.bukkit.Bukkit.getScheduler().runTaskLater(GunLauncherPlugin.getInstance(), () -> {
             if (player.isOnline() && player.getInventory().getItemInMainHand().equals(gunItem)) {
-                ItemMeta meta = gunItem.getItemMeta();
-                if (meta != null) {
-                    meta.getPersistentDataContainer().set(ammoKey, PersistentDataType.INTEGER, getMaxAmmo());
-                    gunItem.setItemMeta(meta);
+                ItemMeta currentMeta = gunItem.getItemMeta();
+                if (currentMeta != null) {
+                    currentMeta.getPersistentDataContainer().set(ammoKey, PersistentDataType.INTEGER, getMaxAmmo());
+                    gunItem.setItemMeta(currentMeta);
                     player.playSound(player.getLocation(), Sound.BLOCK_IRON_DOOR_OPEN, 1.0f, 1.2f);
                     player.sendMessage("§aリロード完了！");
                 }
@@ -125,4 +113,3 @@ public class SampleM4A1Gun implements CustomGun {
         }, 40L);
     }
 }
-```
